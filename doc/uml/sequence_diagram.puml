@@ -1,0 +1,12 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+Client ->"protes-auth-fe": Inserimento credenziali
+"protes-auth-fe" -> "API Gateway": Invio credenziali
+"API Gateway" -> "protes-auth-be": Richiamo controller
+"protes-auth-be" -> "AWS Cognito": Validazione credenziali
+"Client" <-- "AWS Cognito": User & Token
+
+@enduml

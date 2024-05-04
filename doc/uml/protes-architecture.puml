@@ -1,0 +1,74 @@
+@startuml
+'https://plantuml.com/component-diagram
+
+
+
+node "AWS S3 Auth" {
+  [protes-auth-fe]
+}
+
+rectangle "API Gateway SignIn" {
+    node "AWS Elastick Beanstalk Auth" {
+      [protes-auth-be]
+    }
+}
+
+cloud {
+  [AWS Cognito]
+}
+
+[protes-auth-fe] --> [protes-auth-be]
+[protes-auth-be]-->[AWS Cognito]
+[AWS Cognito]-->[protes-auth-be]
+[protes-auth-be] --> [protes-auth-fe]
+
+
+node "AWS S3 Sales" {
+  [protes-sales-fe]
+}
+
+rectangle "API Gateway Sales" {
+    [Cognito Authorizer]
+    node "AWS Elastick Beanstalk Sales" {
+      [protes-sales-be]
+    }
+}
+
+
+node "AWS Elastick Beanstalk Metadata" {
+      [protes-metadata-be]
+}
+
+[protes-sales-fe] --> [Cognito Authorizer]
+[Cognito Authorizer] --> [protes-sales-be]
+[protes-sales-be] --> [protes-metadata-be]
+[protes-auth-fe] --> [protes-sales-fe]
+[Cognito Authorizer] --> [protes-sales-fe]
+[protes-sales-be] --> [Cognito Authorizer]
+[protes-metadata-be] --> [protes-sales-be]
+
+
+database "MongoDB" {
+  folder "protes" {
+    [food]
+    [users]
+  }
+  folder "metadata" {
+      [regions]
+      [countries]
+      [steps]
+      [food_areas]
+      [activities]
+    }
+}
+
+[protes-sales-be] <--> "food"
+[protes-sales-be] <--> "users"
+
+[protes-metadata-be] <--> [regions]
+[protes-metadata-be] <--> [countries]
+[protes-metadata-be] <--> [steps]
+[protes-metadata-be] <--> [food_areas]
+[protes-metadata-be] <--> [activities]
+
+@enduml
